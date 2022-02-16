@@ -1,0 +1,60 @@
+version: '3.5'
+
+services:
+  condo-turbo-oauth-web:
+    container_name: condo-turbo-oauth-web
+    build:
+      context: ./docker/nginx
+      args:
+        UID: $U_ID
+    ports:
+      - '2500:80'
+    volumes:
+      - ./public:/appdata/www/public
+    depends_on:
+      - condo-turbo-oauth-app
+    networks:
+      - condo-turbo-network
+
+  condo-turbo-oauth-app:
+    container_name: condo-turbo-oauth-app
+    build:
+      context: ./docker/php
+      args:
+        UID: $U_ID
+    volumes:
+      - ./:/appdata/www
+    ###> XDEBUG 3 ###
+    # Use your client IP here
+    # Linux: run "ip a | grep docker0"
+    # Windows (with WSL2) and Mac: host.docker.internal
+    environment:
+      XDEBUG_CLIENT_HOST: 172.17.0.1
+      XDEBUG_CLIENT_PORT: 9003
+      PHP_IDE_CONFIG: serverName=condo-turbo-oauth-server
+    networks:
+      - condo-turbo-network
+    depends_on:
+      - condo-turbo-oauth-mysql
+
+  condo-turbo-oauth-mysql:
+    container_name: condo-turbo-oauth-mysql
+    image: mariadb:10.7.1
+    ports:
+      - '3366:3306'
+    environment:
+      MYSQL_DATABASE: oauth
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - condo-turbo-oauth-mysql-data:/var/lib/mysql
+    networks:
+      - condo-turbo-network
+    command: [ 'mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
+
+networks:
+  condo-turbo-network:
+    external: true
+
+volumes:
+  condo-turbo-oauth-mysql-data:
+
