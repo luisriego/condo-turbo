@@ -14,7 +14,7 @@ services:
     depends_on:
       - condo-turbo-app-be
     networks:
-      - condo-turbo-app-network
+      - condo-turbo-network
 
   condo-turbo-app-be:
     container_name: condo-turbo-app-be
@@ -33,7 +33,7 @@ services:
       XDEBUG_CLIENT_PORT: 9003
       PHP_IDE_CONFIG: serverName=condo-turbo-app-be
     networks:
-      - condo-turbo-app-network
+      - condo-turbo-network
     depends_on:
       - condo-turbo-app-mysql
 
@@ -48,7 +48,7 @@ services:
     volumes:
       - condo-turbo-app-mysql-data:/var/lib/mysql
     networks:
-      - condo-turbo-app-network
+      - condo-turbo-network
     command: [ 'mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
 
 networks:
