@@ -1,4 +1,4 @@
-#!/bin/bash
+.PHONY: help start-all stop-all build-all restart-all ssh-register ssh-application ssh-mailer
 
 help: ## Show this help message
 	@echo 'usage: make [target]'
@@ -6,43 +6,32 @@ help: ## Show this help message
 	@echo 'targets:'
 	@egrep '^(.+)\:\ ##\ (.+)' ${MAKEFILE_LIST} | column -t -c 2 -s ':#'
 
-ssh-be: ## bash into the be container
-	./make.sh ssh-be ${DOCKER_BE}
+start-all: ## Runs all services: RabbitMQ, Oauth and Application
+# 	make -C rabbitmq start
+	make -C oauth start
+	make -C app start
+	$(MAKE) prepare-all
 
-start: ## Start the containers
-	./make.sh start ${DOCKER_BE}
+prepare-all: ## Install dependencies and run migrations in all services
+	make -C oauth prepare
+	make -C app prepare
 
-stop: ## Stop the containers
-	./make.sh stop ${DOCKER_BE}
+stop-all: ## Stops all services: RabbitMQ, Oauth and Application
+# 	make -C rabbitmq stop
+	make -C oauth stop
+	make -C app stop
 
-restart: ## Restart the containers
-	$(MAKE) stop && $(MAKE) start
+build-all: ## Build all services: RabbitMQ, Oauth and Application
+	make -C oauth build
+	make -C app build
 
-build: ## Rebuilds all the containers
-	./make.sh build ${DOCKER_BE}
+restart-all: ## Restarts all services: RabbitMQ, Oauth and Application
+# 	make -C rabbitmq restart
+	make -C oauth restart
+	make -C app restart
 
-code-style: ## Runs php-cs to fix code styling following Symfony rules
-	./make.sh code-style ${DOCKER_BE}
+ssh-oauth: ## bash into Oauth
+	make -C oauth ssh-be
 
-code-style-check: ## Runs php-cs with dry run option to check if everything is ok
-	./make.sh code-style-check ${DOCKER_BE}
-
-run: ## starts the Symfony development server
-	./make.sh run ${DOCKER_BE}
-
-logs: ## Show Symfony logs in real time
-	./make.sh logs ${DOCKER_BE}
-
-# Backend commands
-composer-install: ## Installs composer dependencies
-	./make.sh composer-install ${DOCKER_BE}
-# End backend commands
-
-prepare: ## Runs backend commands
-	$(MAKE) composer-install
-
-tests: ## Run tests
-	./make.sh tests ${DOCKER_BE}
-
-generate-private-key:
-	./make.sh generate-private-key
+ssh-app: ## bash into Application
+	make -C app ssh-be

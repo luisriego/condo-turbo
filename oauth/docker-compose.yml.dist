@@ -12,12 +12,12 @@ services:
     volumes:
       - ./public:/appdata/www/public
     depends_on:
-      - condo-turbo-oauth-app
+      - condo-turbo-oauth-be
     networks:
       - condo-turbo-network
 
-  condo-turbo-oauth-app:
-    container_name: condo-turbo-oauth-app
+  condo-turbo-oauth-be:
+    container_name: condo-turbo-oauth-be
     build:
       context: ./docker/php
       args:
