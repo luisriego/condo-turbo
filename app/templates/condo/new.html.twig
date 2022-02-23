@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Condo{% endblock %}
+
+{% block body %}
+<main id="main">
+    <section class="section-t8">
+        <h1>Create new Condo</h1>
+
+        {{ include('condo/_form.html.twig') }}
+
+        <a href="{{ path('condo_index') }}">back to list</a>
+    </section>
+</main>
+{% endblock %}
