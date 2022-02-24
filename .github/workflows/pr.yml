@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: copy docker-compose
+        run: cp -n docker-compose.yml.dist docker-compose.yml || true
       - name: Pull docker-compose
         run: docker-compose -f docker-compose.yml pull
       - uses: satackey/action-docker-layer-caching@v0.0.11
