@@ -19,12 +19,12 @@ jobs:
         continue-on-error: true
       - name: copy .env.example to .env for testing
         run: cp -n .env.example .env
-#       - name: Prepare containers
-#         run: make start && make composer-install
-#       - name: Run coding style check
-#         run: make code-style-check
-#       - name: Run tests
-#         run: make tests
+      - name: Prepare containers
+        run: make start && make composer-install
+      - name: Run coding style check
+        run: make code-style-check
+      - name: Run tests
+        run: make tests
 
   oauth_checks:
     name: oauth checks
