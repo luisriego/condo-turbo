@@ -20,7 +20,7 @@ jobs:
       - name: copy .env.example to .env for testing
         run: cp -n .env.example .env
       - name: Prepare containers
-        run: make start
+        run: make start && make composer-install
       - name: Run coding style check
         run: make code-style-check
       - name: Run tests
