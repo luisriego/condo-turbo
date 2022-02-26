@@ -48,7 +48,7 @@ migrations: ## Runs the migrations
 	U_ID=${UID} docker exec -it --user ${UID} ${DOCKER_BE} bin/console doctrine:migrations:migrate -n --allow-no-migration
 
 be-logs: ## Tails the Symfony dev log
-	U_ID=${UID} docker exec -it --user ${UID} ${DOCKER_BE} tail -f var/log/dev.log
+	U_ID=${UID} docker exec -i --user ${UID} ${DOCKER_BE} tail -f var/log/dev.log
 # End backend commands
 
 ssh-be: ## bash into the be container
