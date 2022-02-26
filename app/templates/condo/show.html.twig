@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Condo{% endblock %}
+
+{% block body %}
+<main id="main">
+    <section class="section-t8">
+    <h1>Condo</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Cnpj</th>
+                <td>{{ condo.cnpj }}</td>
+            </tr>
+            <tr>
+                <th>FantasyName</th>
+                <td>{{ condo.fantasyName }}</td>
+            </tr>
+            <tr>
+                <th>Id</th>
+                <td>{{ condo.id }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('condo_index') }}">back to list</a>
+
+    <a href="{{ path('condo_edit', {'id': condo.id}) }}">edit</a>
+
+    {{ include('condo/_delete_form.html.twig') }}
+    </section>
+</main>
+{% endblock %}

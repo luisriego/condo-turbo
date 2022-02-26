@@ -3,6 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use App\Traits\IdentifierTrait;
+use App\Traits\NameTrait;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -11,10 +15,7 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'NONE')]
-    #[ORM\Column(type: 'string', columnDefinition: 'CHAR(36) NOT NULL')]
-    private string $id;
+    use IdentifierTrait, NameTrait;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     private ?string $email;
@@ -25,15 +26,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', nullable: true)]
     private ?string $password;
 
+    #[ORM\ManyToMany(targetEntity: Condo::class, inversedBy: 'users')]
+    private $condos;
+
     public function __construct(string $email)
     {
         $this->id = Uuid::v4()->toRfc4122();
         $this->setEmail($email);
-    }
-
-    public function getId(): ?string
-    {
-        return $this->id;
+        $this->condos = new ArrayCollection();
     }
 
     public function getEmail(): ?string
@@ -118,5 +118,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection<int, Condo>
+     */
+    public function getCondos(): Collection
+    {
+        return $this->condos;
+    }
+
+    public function addCondo(Condo $condo): self
+    {
+        if (!$this->condos->contains($condo)) {
+            $this->condos[] = $condo;
+        }
+
+        return $this;
+    }
+
+    public function removeCondo(Condo $condo): self
+    {
+        $this->condos->removeElement($condo);
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getId();
     }
 }

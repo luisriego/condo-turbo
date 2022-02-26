@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Condo index{% endblock %}
+
+{% block body %}
+<main id="main">
+    <section class="section-t8">
+        <h1>Condo index</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Cnpj</th>
+                    <th>FantasyName</th>
+                    <th>Id</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for condo in condos %}
+                <tr>
+                    <td>{{ condo.cnpj }}</td>
+                    <td>{{ condo.fantasyName }}</td>
+                    <td>{{ condo.id }}</td>
+                    <td>
+                        <a href="{{ path('condo_show', {'id': condo.id}) }}">show</a>
+                        <a href="{{ path('condo_edit', {'id': condo.id}) }}">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('condo_new') }}">Create new</a>
+    </section>
+</main>
+{% endblock %}
