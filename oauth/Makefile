@@ -20,7 +20,7 @@ help: ## Show this help message
 	@egrep '^(.+)\:\ ##\ (.+)' ${MAKEFILE_LIST} | column -t -c 2 -s ':#'
 
 start: ## Start the containers
-	docker network create microservices-network || true
+	docker network create condo-turbo-network || true
 	cp -n docker-compose.yml.dist docker-compose.yml || true
 	cp -n .env.dist .env || true
 	U_ID=${UID} docker-compose up -d
@@ -32,7 +32,7 @@ restart: ## Restart the containers
 	$(MAKE) stop && $(MAKE) start
 
 build: ## Rebuilds all the containers
-	docker network create microservices-network || true
+	docker network create condo-turbo-network || true
 	cp -n docker-compose.yml.dist docker-compose.yml || true
 	cp -n .env.dist .env || true
 	U_ID=${UID} docker-compose build
@@ -41,7 +41,7 @@ prepare: ## Runs backend commands
 	$(MAKE) composer-install
 # Backend commands
 composer-install: ## Installs composer dependencies
-	U_ID=${UID} docker exec --user ${UID} -it ${DOCKER_BE} composer install --no-interaction
+	U_ID=${UID} docker exec --user ${UID} -i ${DOCKER_BE} composer install --no-interaction
 
 be-logs: ## Tails the Symfony dev log
 	U_ID=${UID} docker exec -it --user ${UID} ${DOCKER_BE} tail -f var/log/dev.log
@@ -51,4 +51,4 @@ ssh-be: ## bash into the be container
 	U_ID=${UID} docker exec -it --user ${UID} ${DOCKER_BE} bash
 
 code-style: ## Runs php-cs to fix code styling following Symfony rules
-	U_ID=${UID} docker exec -it --user ${UID} ${DOCKER_BE} php-cs-fixer fix src --rules=@Symfony
+	U_ID=${UID} docker exec -i --user ${UID} ${DOCKER_BE} php-cs-fixer fix src --rules=@Symfony

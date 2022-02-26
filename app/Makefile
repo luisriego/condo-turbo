@@ -42,7 +42,7 @@ prepare: ## Runs backend commands
 	$(MAKE) migrations
 # Backend commands
 composer-install: ## Installs composer dependencies
-	U_ID=${UID} docker exec --user ${UID} -it ${DOCKER_BE} composer install --no-interaction
+	U_ID=${UID} docker exec --user ${UID} -i ${DOCKER_BE} composer install --no-interaction
 
 migrations: ## Runs the migrations
 	U_ID=${UID} docker exec -it --user ${UID} ${DOCKER_BE} bin/console doctrine:migrations:migrate -n --allow-no-migration
@@ -55,6 +55,6 @@ ssh-be: ## bash into the be container
 	U_ID=${UID} docker exec -it --user ${UID} ${DOCKER_BE} bash
 
 code-style: ## Runs php-cs to fix code styling following Symfony rules
-	U_ID=${UID} docker exec -it --user ${UID} ${DOCKER_BE} php-cs-fixer fix src --rules=@Symfony
+	U_ID=${UID} docker exec -i --user ${UID} ${DOCKER_BE} php-cs-fixer fix src --rules=@Symfony
 
 .PHONY: migrations
