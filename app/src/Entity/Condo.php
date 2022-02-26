@@ -17,17 +17,19 @@ class Condo
     use IdentifierTrait, IsActiveTrait, TimestampableTrait;
 
     #[ORM\Column(type: 'string', length: 14)]
-    private ?string $cnpj;
+    private ?string $cnpj = '';
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    private ?string $fantasyName;
+    private ?string $fantasyName = '';
 
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'condos')]
     private $users;
 
-    public function __construct()
+    public function __construct(string $fantasyName, string $cnpj)
     {
         $this->id = Uuid::v4()->toRfc4122();
+        $this->fantasyName = $fantasyName;
+        $this->cnpj = $cnpj;
     }
 
     public function getId(): ?string

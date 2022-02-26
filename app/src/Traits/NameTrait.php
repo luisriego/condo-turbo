@@ -8,8 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait NameTrait
 {
-    #[ORM\Column(type: 'string', length: 100)]
-    protected string $name;
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    protected string $name = '';
 
     public function getName(): string
     {

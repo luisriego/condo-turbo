@@ -1,0 +1,6 @@
+App\Entity\Condo:
+  Condo-0:
+    __construct:
+      cnpj: '1234567890'
+      fantasyName: Condominium
+#    addUser: '@User-0'
