@@ -32,7 +32,7 @@ restart: ## Restart the containers
 	$(MAKE) stop && $(MAKE) start
 
 build: ## Rebuilds all the containers
-	docker network create condo-turbo-etwork || true
+	docker network create condo-turbo-network || true
 	cp -n docker-compose.yml.dist docker-compose.yml || true
 	cp -n .env.dist .env || true
 	U_ID=${UID} docker-compose build
