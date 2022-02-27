@@ -25,11 +25,9 @@ class Condo
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'condos')]
     private $users;
 
-    public function __construct(string $fantasyName, string $cnpj)
+    public function __construct()
     {
         $this->id = Uuid::v4()->toRfc4122();
-        $this->fantasyName = $fantasyName;
-        $this->cnpj = $cnpj;
     }
 
     public function getId(): ?string

@@ -5,9 +5,11 @@
 {% block body %}
 <main id="main">
     <section class="section-t8">
-        <h1>Condo index</h1>
+            <div class="container">
+                <div class="row">
+                    <h1>Condo index</h1>
 
-        <table class="table">
+                    <table class="table">
             <thead>
                 <tr>
                     <th>Cnpj</th>
@@ -35,7 +37,9 @@
             </tbody>
         </table>
 
-        <a href="{{ path('condo_new') }}">Create new</a>
+                    <a href="{{ path('condo_new') }}">Create new</a>
+                </div>
+            </div>
     </section>
 </main>
 {% endblock %}

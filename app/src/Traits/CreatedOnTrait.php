@@ -6,6 +6,7 @@ namespace App\Traits;
 
 trait CreatedOnTrait
 {
+    #[ORM\Column(type: 'datetime')]
     protected \DateTime $createdOn;
 
     public function getCreatedOn(): \Datetime
