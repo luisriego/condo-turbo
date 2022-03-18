@@ -6,6 +6,7 @@ use App\Entity\Condo;
 use App\Form\Condo1Type;
 use App\Form\CondoType;
 use App\Repository\CondoRepository;
+use App\Service\Condo\ListCondosService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,11 +16,15 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/condo')]
 class CondoController extends AbstractController
 {
+    public function __construct(private ListCondosService $listCondosService)
+    {
+    }
+
     #[Route('/', name: 'condo_index', methods: ['GET'])]
-    public function index(CondoRepository $condoRepository): Response
+    public function index(): Response
     {
         return $this->render('condo/index.html.twig', [
-            'condos' => $condoRepository->findAll(),
+            'condos' => $this->listCondosService->__invoke(),
         ]);
     }
 
