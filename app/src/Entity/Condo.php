@@ -9,6 +9,7 @@ use App\Traits\TimestampableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: CondoRepository::class)]
@@ -28,6 +29,7 @@ class Condo
     public function __construct()
     {
         $this->id = Uuid::v4()->toRfc4122();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?string
@@ -84,5 +86,11 @@ class Condo
         }
 
         return $this;
+    }
+
+    #[Pure]
+    public function containsUser(User $user): bool
+    {
+        return $this->users->contains($user);
     }
 }
