@@ -23,13 +23,18 @@ class Condo
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     private ?string $fantasyName = '';
 
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'condos')]
+    #[ORM\OneToMany(mappedBy: 'condo', targetEntity: User::class, orphanRemoval: true)]
     private $users;
 
     public function __construct()
     {
         $this->id = Uuid::v4()->toRfc4122();
         $this->users = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->fantasyName;
     }
 
     public function getId(): ?string
@@ -64,7 +69,7 @@ class Condo
     /**
      * @return Collection<int, User>
      */
-    public function getUsers(): Collection|null
+    public function getUsers(): Collection
     {
         return $this->users;
     }
@@ -73,7 +78,7 @@ class Condo
     {
         if (!$this->users->contains($user)) {
             $this->users[] = $user;
-            $user->addCondo($this);
+            $user->setCondo($this);
         }
 
         return $this;
@@ -82,11 +87,15 @@ class Condo
     public function removeUser(User $user): self
     {
         if ($this->users->removeElement($user)) {
-            $user->removeCondo($this);
+            // set the owning side to null (unless already changed)
+            if ($user->getCondo() === $this) {
+                $user->setCondo(null);
+            }
         }
 
         return $this;
     }
+
 
     #[Pure]
     public function containsUser(User $user): bool
