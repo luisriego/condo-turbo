@@ -6,3 +6,4 @@ App\Entity\User:
     __construct:
       email: peter@api.com
     password: <{testing_password_hash}>
+    setCondo: '@Condo-0'

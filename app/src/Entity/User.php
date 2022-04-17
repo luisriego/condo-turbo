@@ -8,6 +8,7 @@ use App\Traits\NameTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
@@ -26,14 +27,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', nullable: true)]
     private ?string $password;
 
-    #[ORM\ManyToMany(targetEntity: Condo::class, inversedBy: 'users')]
-    private $condos;
+    #[ORM\ManyToOne(targetEntity: Condo::class, inversedBy: 'users')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $condo;
 
     public function __construct(string $email)
     {
         $this->id = Uuid::v4()->toRfc4122();
         $this->setEmail($email);
-        $this->condos = new ArrayCollection();
+    }
+
+    #[Pure] public function __toString(): string
+    {
+        return $this->getId();
     }
 
     public function getEmail(): ?string
@@ -120,32 +126,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    /**
-     * @return Collection<int, Condo>
-     */
-    public function getCondos(): Collection
+    public function getCondo(): ?Condo
     {
-        return $this->condos;
+        return $this->condo;
     }
 
-    public function addCondo(Condo $condo): self
+    public function setCondo(?Condo $condo): self
     {
-        if (!$this->condos->contains($condo)) {
-            $this->condos[] = $condo;
-        }
+        $this->condo = $condo;
 
         return $this;
-    }
-
-    public function removeCondo(Condo $condo): self
-    {
-        $this->condos->removeElement($condo);
-
-        return $this;
-    }
-
-    public function __toString(): string
-    {
-        return $this->getId();
     }
 }
