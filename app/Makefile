@@ -10,7 +10,7 @@ ifeq ($(OS),Darwin)
 else ifeq ($(NAMESERVER_IP),)
 	NAMESERVER_IP = $(shell grep nameserver /etc/resolv.conf  | cut -d ' ' -f2)
 else
-	NAMESERVER_IP = 172.17.0.1 # replace this IP with your "docker0" one (run "ip a" in your terminal to check it)
+	NAMESERVER_IP = 172.17.0/16 # replace this IP with your "docker0" one (run "ip a" in your terminal to check it)
 endif
 
 help: ## Show this help message
