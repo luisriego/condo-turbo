@@ -4,18 +4,16 @@ namespace App\Entity;
 
 use App\Repository\CondoRepository;
 use App\Traits\IdentifierTrait;
-use App\Traits\IsActiveTrait;
 use App\Traits\TimestampableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: CondoRepository::class)]
 class Condo
 {
-    use IdentifierTrait, IsActiveTrait, TimestampableTrait;
+    use IdentifierTrait;
 
     #[ORM\Column(type: 'string', length: 14)]
     private ?string $cnpj = '';
@@ -23,13 +21,28 @@ class Condo
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     private ?string $fantasyName = '';
 
+    #[ORM\Column(type: 'boolean')]
+    protected bool $isActive = false;
+
+    #[ORM\Column(type: 'datetime_immutable')]
+    protected \DateTime $createdOn;
+
+    #[ORM\Column(type: 'datetime')]
+    protected \DateTime $updatedOn;
+
     #[ORM\OneToMany(mappedBy: 'condo', targetEntity: User::class, orphanRemoval: true)]
     private $users;
+
+    #[ORM\OneToMany(mappedBy: 'condo', targetEntity: Entry::class, orphanRemoval: true)]
+    private $entries;
 
     public function __construct()
     {
         $this->id = Uuid::v4()->toRfc4122();
         $this->users = new ArrayCollection();
+        $this->entries = new ArrayCollection();
+        $this->createdOn = new \DateTime();
+        $this->markAsUpdated();
     }
 
     public function __toString(): string
@@ -96,10 +109,63 @@ class Condo
         return $this;
     }
 
-
-    #[Pure]
-    public function containsUser(User $user): bool
+    /**
+     * @return Collection<int, Entry>
+     */
+    public function getEntries(): Collection
     {
-        return $this->users->contains($user);
+        return $this->entries;
+    }
+
+    public function addEntry(Entry $entry): self
+    {
+        if (!$this->entries->contains($entry)) {
+            $this->entries[] = $entry;
+            $entry->setCondo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEntry(Entry $entry): self
+    {
+        if ($this->entries->removeElement($entry)) {
+            // set the owning side to null (unless already changed)
+            if ($entry->getCondo() === $this) {
+                $entry->setCondo(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): void
+    {
+        $this->isActive = $isActive;
+    }
+
+    public function toggleActive(): void
+    {
+        $this->isActive = !$this->isActive;
+    }
+
+    public function getCreatedOn(): \Datetime
+    {
+        return $this->createdOn;
+    }
+
+    public function getUpdatedOn(): \DateTime
+    {
+        return $this->updatedOn;
+    }
+
+    public function markAsUpdated(): void
+    {
+        $this->updatedOn = new \DateTime();
     }
 }
