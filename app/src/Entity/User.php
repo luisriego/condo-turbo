@@ -31,10 +31,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(nullable: false)]
     private $condo;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Entry::class, orphanRemoval: true)]
+    private $entries;
+
     public function __construct(string $email)
     {
         $this->id = Uuid::v4()->toRfc4122();
         $this->setEmail($email);
+        $this->entries = new ArrayCollection();
     }
 
     #[Pure] public function __toString(): string
@@ -134,6 +138,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCondo(?Condo $condo): self
     {
         $this->condo = $condo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Entry>
+     */
+    public function getEntries(): Collection
+    {
+        return $this->entries;
+    }
+
+    public function addEntry(Entry $entry): self
+    {
+        if (!$this->entries->contains($entry)) {
+            $this->entries[] = $entry;
+            $entry->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEntry(Entry $entry): self
+    {
+        if ($this->entries->removeElement($entry)) {
+            // set the owning side to null (unless already changed)
+            if ($entry->getUser() === $this) {
+                $entry->setUser(null);
+            }
+        }
 
         return $this;
     }
