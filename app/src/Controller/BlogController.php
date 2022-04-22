@@ -11,7 +11,7 @@ class BlogController extends AbstractController
     #[Route('/blog-grid', name: 'blog-grid')]
     public function index(): Response
     {
-        return $this->render('main/blog-grid.html.twig', [
+        return $this->render('public/main/blog-grid.html.twig', [
             'title' => 'Our Amazing Posts',
             'text' => 'Grid News',
             'page' => 'News Grid',
