@@ -4,7 +4,9 @@ namespace App\Entity;
 
 use App\Repository\EntryRepository;
 use App\Traits\IdentifierTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: EntryRepository::class)]
 class Entry
@@ -31,11 +33,17 @@ class Entry
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'entries')]
     #[ORM\JoinColumn(nullable: false)]
-    private $user;
+    private User $user;
 
     #[ORM\ManyToOne(targetEntity: Condo::class, inversedBy: 'entries')]
     #[ORM\JoinColumn(nullable: false)]
-    private $condo;
+    private Condo $condo;
+
+    public function __construct()
+    {
+        $this->id = Uuid::v4()->toRfc4122();
+        $this->createdOn = new \DateTime();
+    }
 
 
     public function getId(): ?int
@@ -94,13 +102,6 @@ class Entry
     public function getCreatedOn(): ?\DateTimeInterface
     {
         return $this->createdOn;
-    }
-
-    public function setCreatedOn(\DateTimeInterface $createdOn): self
-    {
-        $this->createdOn = $createdOn;
-
-        return $this;
     }
 
     public function getState(): ?int
