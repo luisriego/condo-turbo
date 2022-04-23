@@ -5,6 +5,7 @@
         "@symfony/webpack-encore": "^1.7.0",
         "bootstrap": "4.6.1",
         "core-js": "^3.0.0",
+        "jquery": "^3.6.0",
         "regenerator-runtime": "^0.13.2",
         "webpack-notifier": "^1.6.0"
     },
@@ -18,9 +19,14 @@
     },
     "dependencies": {
         "@fortawesome/fontawesome": "^1.1.8",
-        "admin-lte": "^3.2",
+        "@fortawesome/fontawesome-free": "^6.1.1",
+        "@morteza-jamali/lineicons": "^2.0.1",
         "animate.css": "^4.1.1",
         "bootstrap-icons": "^1.8.1",
+        "font-awesome": "^4.7.0",
+        "jquery.easing": "^1.4.1",
+        "moment": "^2.29.3",
+        "momentjs": "^2.0.0",
         "stimulus-carousel": "^4.0.0",
         "swiper": "7.3.0"
     }
