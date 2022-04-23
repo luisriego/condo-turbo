@@ -6,13 +6,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CondoController extends AbstractController
+class UserController extends AbstractController
 {
-    #[Route('/admin/condo', name: 'condo-profile')]
+    #[Route('/admin/user-profile', name: 'user-profile')]
     public function index(): Response
     {
-        return $this->render('admin/condo/condo-profile.html.twig', [
-            'title' => 'Condo Profile'
+        return $this->render('admin/user/user-profile.html.twig', [
+            'title' => 'User Profile'
         ]);
     }
 }
